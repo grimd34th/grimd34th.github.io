@@ -1,1 +1,235 @@
-<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html" charset="UTF-8"><meta name="viewport" content="width=932"><meta name="MobileOptimized" content="932"><meta name="generator" content="D34TH"><title>Configuring Vyatta remote VPN</title><link rel="stylesheet" type="text/css" href="/css/normalize.css"><link rel="stylesheet" type="text/css" href="/css/awe.css"><link rel="stylesheet" type="text/css" href="/css/social-likes.css"><link rel="alternate" type="application/rss+xml" title="RSS" href=""><script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><script src="/js/imgLiquid-min.js"></script><script src="/js/social-likes.min.js"></script></head><body><div class="main-container"><div class="box profile"><div class="heading" style="background: #3e5354 url(/images/bg-heading.jpg) no-repeat"><div class="profile-img"><a href="//grimd34th.github.io/"><img src="/images/img-profile.jpg" width="154" height="150" alt="image description"></a></div><strong class="user"><a href="/">D34TH</a></strong> <span class="locate">United States</span></div><div class="setting"><a href="//grimd34th.github.io/" class="btn-profile">Profile</a> <a href="/" class="btn-photos">Photos</a> <a href="/" class="btn-follow">Follow me</a></div></div><div class="two-columns post-page"><div class="content"><div class="post box nocover"><em class="date"><span>08</span>Aug</em><h2 class="post-title"><a href="/2014/08/08/configuring-vyatta-remote-vpn/">Configuring Vyatta remote VPN</a></h2><div class="post-content"><h3 id="Configure_the_L2TP/IPsec_VPN_on_the_Vyatta_Appliance">Configure the L2TP/IPsec VPN on the Vyatta Appliance</h3><p><strong>Step 1. Set Up Vyatta as an L2TP/IPsec VPN Server</strong></p><p>In the following example eth0 is the Public interface enabled for IPsec. The pre-shared secret is “SUPERSECRET”.</p><p>Log onto the Vyatta Appliance using ssh:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ssh vyatta@X.X.X.X</div></pre></td></tr></table></figure><p>Where X.X.X.X is the IP address of the vyatta’s Public interface. You’ll see a Welcome to Vyatta message and a prompt to enter your password.</p><p>Once you’re logged into the appliance, you can enter a “?” or press the Tab key for help.</p><p>Enter configuration mode:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">vyatta@vyatta: configure</div><div class="line">[edit]</div><div class="line">vyatta@vyatta<span class="comment">#</span></div></pre></td></tr></table></figure><p>The # symbol indicates you’re in configuration mode.</p><p>Define the interface used for IPsec; in this case eth0 is the public interface enabled for IPsec :</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">set</span> vpn ipsec ipsec-interfaces interface eth0</div></pre></td></tr></table></figure><p>Enable NAT traversal allowing IPSec packets to travel through NAT points in the network:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">set</span> vpn ipsec nat-traversal enable</div></pre></td></tr></table></figure><p>Set the remote client IP subnet from which connection is initiated.<br>To allow clients to connect from anywhere specify 0.0.0.0/0 as the allowed-network</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">set</span> vpn ipsec nat-networks allowed-network <span class="number">0.0</span>.<span class="number">0.0</span>/<span class="number">0</span></div></pre></td></tr></table></figure><p>Commit the change:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vyatta@vyatta<span class="comment"># commit</span></div></pre></td></tr></table></figure><p>Save the change:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">vyatta@vyatta<span class="comment"># save</span></div><div class="line">Saving configuration to /config/config.boot</div></pre></td></tr></table></figure><p>Show the IPsec configuration:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">vyatta@vyatta<span class="comment"># show vpn ipsec</span></div><div class="line">ipsec-interfaces { interface eth0 }</div><div class="line">nat-networks { allowed-�network <span class="number">0.0</span>.<span class="number">0.0</span>/<span class="number">0</span> {} }</div><div class="line">nat-traversal enable</div></pre></td></tr></table></figure><p><strong>Step 2. Configure L2TP remote access address and the client pool</strong></p><p>Bind the L2TP server to the external address:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">set</span> vpn l2tp remote-access outside-address X.X.X.X</div></pre></td></tr></table></figure><p>Where X.X.X.X represents the Vyatta eth0 interface IP address.</p><p>Set up the pool of IP addresses that remote VPN clients will assume.</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">set</span> vpn l2tp remote-access client-ip-pool start <span class="number">10.8</span>.<span class="number">0.1</span></div></pre></td></tr></table></figure><p>Where 10.8.0.1 represents the start IP address for the client pool.</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">set</span> vpn l2tp remote-access client-ip-pool stop <span class="number">10.8</span>.<span class="number">0.255</span></div></pre></td></tr></table></figure><p>Where 10.8.0.255 represents the end IP address for the client pool.</p><p><strong>Step 3. Configure the IPsec pre-shared secret and user authentication</strong></p><p>Set the IPsec authentication mode to the pre-shared secret:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">set</span> vpn l2tp remote-access ipsec-settings authentication mode pre-shared-secret</div></pre></td></tr></table></figure><p>Set the pre-shared secret:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">set</span> vpn l2tp remote-access ipsec-settings authentication pre-shared-secret SUPERSECRET</div></pre></td></tr></table></figure><p>Set the L2TP remote access authentication mode to local:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">set</span> vpn l2tp remote-�access authentication mode local</div></pre></td></tr></table></figure><p>This indicates that user authentication occurs locally on the Vyatta Appliance.</p><p>Set theL2TP remote access username and password:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">set</span> vpn l2tp remote-access authentication local-�users username test password test</div></pre></td></tr></table></figure><p><strong>test</strong> and <strong>test</strong> represent the client username and password.</p><p>Commit the change:<br><code>vyatta@vyatta# commit</code><br>Save the change:<br><code>vyatta@vyatta# save Saving configuration to /config/config.boot</code><br>View the LT2P configuration:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">vyatta@vyatta<span class="comment"># show vpn l2tp remote-access</span></div><div class="line">authentication {</div><div class="line">local-�users {</div><div class="line">username test {</div><div class="line">password test</div><div class="line">}</div><div class="line">}</div><div class="line">mode local</div><div class="line">}</div><div class="line">client-ip-�pool {</div><div class="line">start <span class="number">10.8</span>.<span class="number">0.1</span></div><div class="line">stop <span class="number">10.8</span>.<span class="number">0.255</span></div><div class="line">}</div><div class="line">ipsec-�settings {</div><div class="line">authentication {</div><div class="line">mode pre-�shared-�secret</div><div class="line">pre-shared-�secret SUPERSECRET</div><div class="line">}</div><div class="line">}</div><div class="line">outside-address X.X.X.X</div></pre></td></tr></table></figure><p>This completes the L2TP configuration on the Vyatta Appliance. If you later want to edit the L2TP remote access configuration, enter remote-access while in the edit mode on the Vyatta Appliance.</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">vyatta@vyatta<span class="comment"># edit vpn l2tp remote-access </span></div><div class="line">[edit vpn l2tp remote-access]</div><div class="line">vyatta@vyatta<span class="comment">#</span></div></pre></td></tr></table></figure></div><div class="bottom-panel"><ul class="social-likes" data-url="/2014/08/08/configuring-vyatta-remote-vpn/"><li class="facebook" title="like"></li><li class="twitter" title="twitte"></li><li class="plusone" title="google"></li></ul></div></div></div><div class="widgetarea"><div class="tagcloud" id="fbox-tagcloud" style="margin:10px; display:none; overflow: hidden"></div><ul class="widget blogroll"><h3 class="title">Recent Post</h3><li><div class="text-holder"><h3 class="link-title"><a href="/2014/08/08/sshd-exploit/">sshd exploit</a></h3><p>So a fake sshd claiming to exploit a network check</p></div></li><li><div class="text-holder"><h3 class="link-title"><a href="/2014/08/08/securing-linux-servers/">Securing Linux Servers</a></h3><p>Introduction Taking control of your own Linux serv</p></div></li><li><div class="text-holder"><h3 class="link-title"><a href="/2014/08/08/precise-mysql-setup/">How To Setup MySQL on Ubuntu 12.04</a></h3><p>What the italic Means The lines that the user nee</p></div></li><li><div class="text-holder"><h3 class="link-title"><a href="/2014/08/08/muh-ssh-keys-doe/">Generating secure (ECDSA) SSH keys for your new install</a></h3><p>Generating a SSH key An SSH key pair can be genera</p></div></li><li><div class="text-holder"><h3 class="link-title"><a href="/2014/08/08/this-exploit-was-bad-mmmk/">Heartbleed Announcment</a></h3><p>Important SSL Security VulnerabilityOn Monday, Apr</p></div></li></ul></div></div></div><div class="footer"><div class="container"><a href="//github.com/kywk/hexo-theme-awe">AWE for hexo</a> inspired by <a href="http://goo.gl/H8OMRE">Awesome UI Kit</a>, ported by <a href="//kywk.github.io/">MooCow (Aka. kywk)</a>. &copy; 2014 Trevor Driscoll All Rights Reserved</div></div><script>$(document).ready(function(){$(".imgLiquid").imgLiquid({fill:!0,fadeInTime:500})});</script><link rel="stylesheet" href="/package/fancybox/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"><script type="text/javascript" src="/package/fancybox/jquery.fancybox.pack.js?v=2.1.5"></script><script type="text/javascript">!function(e){e(".fancybox").fancybox(),e(".various").fancybox({maxWidth:800,maxHeight:600,fitToView:!1,width:"70%",height:"70%",autoSize:!0,closeClick:!1,openEffect:"none",closeEffect:"none"})}(jQuery);</script></body></html>
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+  <meta name="viewport" content="width=932" >
+  <meta name="MobileOptimized" content="932" >
+  <meta name="generator" content="D34TH">
+  <title>Configuring Vyatta remote VPN</title>
+
+  <link rel="stylesheet" type="text/css" href="/css/normalize.css">
+  <link rel="stylesheet" type="text/css" href="/css/awe.css">
+  <link rel="stylesheet" type="text/css" href="/css/social-likes.css">
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="">
+
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script src="/js/imgLiquid-min.js"></script>
+  <script src="/js/social-likes.min.js"></script>
+</head>
+
+<body>
+  <div class="main-container">
+    
+
+<div class="box profile">
+  <div class="heading" style="background: #3e5354 url(/images/bg-heading.jpg) no-repeat;">
+    <div class="profile-img">
+      <a href="//grimd34th.github.io/"><img src="/images/img-profile.jpg" width="154" height="150" alt="image description"></a>
+    </div>
+    <strong class="user"><a href="/">D34TH</a></strong>
+    <span class="locate">United States</span>
+  </div>
+  <div class="setting">
+    <a href="//grimd34th.github.io/" class="btn-profile">Profile</a>
+    <a href="/" class="btn-photos">Photos</a>
+    <a href="/" class="btn-follow">Follow me</a>
+  </div>
+</div>
+
+    
+<div class="two-columns post-page">
+  <div class="content">
+
+    <div class="post box nocover">
+      <em class="date"><span>08</span>Aug</em>
+      <h2 class="post-title"><a href="/2014/08/08/configuring-vyatta-remote-vpn/">Configuring Vyatta remote VPN</a></h2>
+      <div class="post-content"><h3 id="Configure_the_L2TP/IPsec_VPN_on_the_Vyatta_Appliance">Configure the L2TP/IPsec VPN on the Vyatta Appliance</h3>
+<p><strong>Step 1. Set Up Vyatta as an L2TP/IPsec VPN Server</strong></p>
+<p>In the following example eth0 is the Public interface enabled for IPsec. The pre-shared secret is “SUPERSECRET”.</p>
+<p>Log onto the Vyatta Appliance using ssh:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ssh vyatta@X.X.X.X</div></pre></td></tr></table></figure>
+
+<p>Where X.X.X.X is the IP address of the vyatta’s Public interface. You’ll see a Welcome to Vyatta message and a prompt to enter your password.</p>
+<p>Once you’re logged into the appliance, you can enter a “?” or press the Tab key for help.</p>
+<p>Enter configuration mode:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">vyatta@vyatta: configure</div><div class="line">[edit]</div><div class="line">vyatta@vyatta<span class="comment">#</span></div></pre></td></tr></table></figure>
+
+<p>The # symbol indicates you’re in configuration mode.</p>
+<p>Define the interface used for IPsec; in this case eth0 is the public interface enabled for IPsec :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">set</span> vpn ipsec ipsec-interfaces interface eth0</div></pre></td></tr></table></figure>
+
+<p>Enable NAT traversal allowing IPSec packets to travel through NAT points in the network:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">set</span> vpn ipsec nat-traversal enable</div></pre></td></tr></table></figure>
+
+<p>Set the remote client IP subnet from which connection is initiated.<br>To allow clients to connect from anywhere specify 0.0.0.0/0 as the allowed-network</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">set</span> vpn ipsec nat-networks allowed-network <span class="number">0.0</span>.<span class="number">0.0</span>/<span class="number">0</span></div></pre></td></tr></table></figure>
+
+<p>Commit the change:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vyatta@vyatta<span class="comment"># commit</span></div></pre></td></tr></table></figure>
+
+<p>Save the change:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">vyatta@vyatta<span class="comment"># save</span></div><div class="line">Saving configuration to /config/config.boot</div></pre></td></tr></table></figure>
+
+<p>Show the IPsec configuration:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">vyatta@vyatta<span class="comment"># show vpn ipsec</span></div><div class="line">ipsec-interfaces { interface eth0 }</div><div class="line">nat-networks { allowed-�network <span class="number">0.0</span>.<span class="number">0.0</span>/<span class="number">0</span> {} }</div><div class="line">nat-traversal enable</div></pre></td></tr></table></figure>
+
+<p><strong>Step 2. Configure L2TP remote access address and the client pool</strong></p>
+<p>Bind the L2TP server to the external address:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">set</span> vpn l2tp remote-access outside-address X.X.X.X</div></pre></td></tr></table></figure>
+
+<p>Where X.X.X.X represents the Vyatta eth0 interface IP address.</p>
+<p>Set up the pool of IP addresses that remote VPN clients will assume. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">set</span> vpn l2tp remote-access client-ip-pool start <span class="number">10.8</span>.<span class="number">0.1</span></div></pre></td></tr></table></figure>
+
+<p>Where 10.8.0.1 represents the start IP address for the client pool.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">set</span> vpn l2tp remote-access client-ip-pool stop <span class="number">10.8</span>.<span class="number">0.255</span></div></pre></td></tr></table></figure>
+
+<p>Where 10.8.0.255 represents the end IP address for the client pool.</p>
+<p><strong>Step 3. Configure the IPsec pre-shared secret and user authentication</strong></p>
+<p>Set the IPsec authentication mode to the pre-shared secret:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">set</span> vpn l2tp remote-access ipsec-settings authentication mode pre-shared-secret</div></pre></td></tr></table></figure>
+
+<p>Set the pre-shared secret:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">set</span> vpn l2tp remote-access ipsec-settings authentication pre-shared-secret SUPERSECRET</div></pre></td></tr></table></figure>
+
+<p>Set the L2TP remote access authentication mode to local:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">set</span> vpn l2tp remote-�access authentication mode local</div></pre></td></tr></table></figure>
+
+<p>This indicates that user authentication occurs locally on the Vyatta Appliance.</p>
+<p>Set theL2TP remote access username and password:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">set</span> vpn l2tp remote-access authentication local-�users username test password test</div></pre></td></tr></table></figure>
+
+<p><strong>test</strong> and <strong>test</strong> represent the client username and password.</p>
+<p>Commit the change:<br><code>vyatta@vyatta# commit</code><br>Save the change:<br><code>vyatta@vyatta# save 
+Saving configuration to /config/config.boot</code><br>View the LT2P configuration:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">vyatta@vyatta<span class="comment"># show vpn l2tp remote-access</span></div><div class="line">authentication {</div><div class="line">local-�users {</div><div class="line">username test {</div><div class="line">password test</div><div class="line">}</div><div class="line">}</div><div class="line">mode local</div><div class="line">}</div><div class="line">client-ip-�pool {</div><div class="line">start <span class="number">10.8</span>.<span class="number">0.1</span></div><div class="line">stop <span class="number">10.8</span>.<span class="number">0.255</span></div><div class="line">}</div><div class="line">ipsec-�settings {</div><div class="line">authentication {</div><div class="line">mode pre-�shared-�secret</div><div class="line">pre-shared-�secret SUPERSECRET</div><div class="line">}</div><div class="line">}</div><div class="line">outside-address X.X.X.X</div></pre></td></tr></table></figure>
+
+<p> This completes the L2TP configuration on the Vyatta Appliance. If you later want to edit the L2TP remote access configuration, enter remote-access while in the edit mode on the Vyatta Appliance.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">vyatta@vyatta<span class="comment"># edit vpn l2tp remote-access </span></div><div class="line">[edit vpn l2tp remote-access]</div><div class="line">vyatta@vyatta<span class="comment">#</span></div></pre></td></tr></table></figure>
+
+</div>
+
+      <div class="bottom-panel">
+        <ul class="social-likes" data-url="/2014/08/08/configuring-vyatta-remote-vpn/">
+          <li class="facebook" title="like"></li>
+          <li class="twitter" title="twitte"></li>
+          <li class="plusone" title="google"></li>
+        </ul>
+      </div>
+    </div>
+    
+  </div>
+
+  <div class="widgetarea">
+
+    
+    
+
+<div class="tagcloud" id="fbox-tagcloud" style="margin:10px; display:none; overflow: hidden"></div>
+
+    
+
+    
+      
+
+<ul class="widget blogroll">
+  <h3 class="title">Recent Post</h3>
+  
+    
+    <li>
+      <div class="text-holder">
+        <h3 class="link-title"><a href="/2014/08/08/sshd-exploit/">sshd exploit</a></h3>
+        <p>So a fake sshd claiming to exploit a network check</p>
+      </div>
+    </li>
+  
+    
+    <li>
+      <div class="text-holder">
+        <h3 class="link-title"><a href="/2014/08/08/securing-linux-servers/">Securing Linux Servers</a></h3>
+        <p>Introduction
+Taking control of your own Linux serv</p>
+      </div>
+    </li>
+  
+    
+    <li>
+      <div class="text-holder">
+        <h3 class="link-title"><a href="/2014/08/08/precise-mysql-setup/">How To Setup MySQL on Ubuntu 12.04</a></h3>
+        <p>What the italic  Means
+The lines that the user nee</p>
+      </div>
+    </li>
+  
+    
+    <li>
+      <div class="text-holder">
+        <h3 class="link-title"><a href="/2014/08/08/muh-ssh-keys-doe/">Generating secure (ECDSA) SSH keys for your new install</a></h3>
+        <p>Generating a SSH key
+An SSH key pair can be genera</p>
+      </div>
+    </li>
+  
+    
+    <li>
+      <div class="text-holder">
+        <h3 class="link-title"><a href="/2014/08/08/this-exploit-was-bad-mmmk/">Heartbleed Announcment</a></h3>
+        <p>Important SSL Security VulnerabilityOn Monday, Apr</p>
+      </div>
+    </li>
+  
+</ul>
+
+
+    
+
+  </div>
+</div>
+
+
+  </div>
+  
+<div class="footer">
+  <div class="container">
+    <a href="//github.com/kywk/hexo-theme-awe">AWE for hexo</a> inspired by <a href="http://goo.gl/H8OMRE">Awesome UI Kit</a>,
+    ported by <a href="//kywk.github.io/">MooCow (Aka. kywk)</a>.
+    
+    &copy; 2014 Trevor Driscoll All Rights Reserved
+    
+  </div>
+</div>
+
+  <!-- disqus -->
+
+
+
+<script>
+$(document).ready(function() {
+  $('.imgLiquid').imgLiquid({fill:true, fadeInTime:500});
+});
+</script>
+
+
+<!-- fancybox -->
+<link rel="stylesheet" href="/package/fancybox/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen" />
+<script type="text/javascript" src="/package/fancybox/jquery.fancybox.pack.js?v=2.1.5"></script>
+<script type="text/javascript">
+(function($){
+  $(".fancybox").fancybox();
+  $(".various").fancybox({
+    maxWidth  : 800,
+    maxHeight : 600,
+    fitToView : false,
+    width   : '70%',
+    height    : '70%',
+    autoSize  : true,
+    closeClick  : false,
+    openEffect  : 'none',
+    closeEffect : 'none'
+  });
+})(jQuery);
+</script>
+
+</body>
+</html>

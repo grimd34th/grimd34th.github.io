@@ -1,1 +1,215 @@
-<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html" charset="UTF-8"><meta name="viewport" content="width=932"><meta name="MobileOptimized" content="932"><meta name="generator" content="D34TH"><title>How To Setup MySQL on Ubuntu 12.04</title><link rel="stylesheet" type="text/css" href="/css/normalize.css"><link rel="stylesheet" type="text/css" href="/css/awe.css"><link rel="stylesheet" type="text/css" href="/css/social-likes.css"><link rel="alternate" type="application/rss+xml" title="RSS" href=""><script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><script src="/js/imgLiquid-min.js"></script><script src="/js/social-likes.min.js"></script></head><body><div class="main-container"><div class="box profile"><div class="heading" style="background: #3e5354 url(/images/bg-heading.jpg) no-repeat"><div class="profile-img"><a href="//grimd34th.github.io/"><img src="/images/img-profile.jpg" width="154" height="150" alt="image description"></a></div><strong class="user"><a href="/">D34TH</a></strong> <span class="locate">United States</span></div><div class="setting"><a href="//grimd34th.github.io/" class="btn-profile">Profile</a> <a href="/" class="btn-photos">Photos</a> <a href="/" class="btn-follow">Follow me</a></div></div><div class="two-columns post-page"><div class="content"><div class="post box nocover"><em class="date"><span>08</span>Aug</em><h2 class="post-title"><a href="/2014/08/08/precise-mysql-setup/">How To Setup MySQL on Ubuntu 12.04</a></h2><div class="post-content"><h4 id="What_the_italic_Means">What the <em>italic</em> Means<br></h4><h5 id="The_lines_that_the_user_needs_to_enter_or_customize_will_be_in_italic_in_this_tutorial!">The lines that the user needs to enter or customize will be in <em>italic</em> in this tutorial!</h5><p>The rest should mostly be copy-and-pastable.</p><h5 id="About_MySQL">About MySQL<br></h5><p>MySQL is an open source database management software that helps users store, organize, and later retrieve data. It has a variety of options to grant specific users nuanced permissions within the tables and databases�this tutorial will give a short overview of a few of the many options.</p><p>How to Create a New User In Part 1 of the MySQL Tutorial, we did all of the editing in MySQL as the root user, with full access to all of the databases. However, in the cases where more restrictions may be required, there are ways to create users with custom permissions.</p><p>Let�s start by making a new user within the MySQL shell:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">CREATE USER `newuser`@`localhost` IDENTIFIED BY `password`;</div></pre></td></tr></table></figure><p>Sadly, at this point newuser has no permissions to do anything with the databases. In fact, if newuser even tries to login (with the password, password), they will not be able to reach the MySQL shell.</p><p>Therefore, the first thing to do is to provide the user with access to the information they will need.</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">GRANT ALL PRIVILEGES ON * . * TO `newuser`@`localhost`;</div></pre></td></tr></table></figure><p>The asterisks in this command refer to the database and table (respectively) that they can access�this specific command allows to the user to read, edit, execute and perform all tasks across all the databases and tables.</p><p>Once you have finalized the permissions that you want to set up for your new users, always be sure to reload all the privileges.</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">FLUSH PRIVILEGES;</div></pre></td></tr></table></figure><p>Your changes will now be in effect.</p><p>How To Grant Different User Permissions Here is a short list of other common possible permissions that users can enjoy.</p><p>ALL PRIVILEGES- as we saw previously, this would allow a MySQL user all access to a designated database (or if no database is selected, across the system)</p><p>CREATE- allows them to create new tables or databases</p><p>DROP- allows them to them to delete tables or databases</p><p>DELETE- allows them to delete rows from tables</p><p>INSERT- allows them to insert rows into tables</p><p>SELECT- allows them to use the Select command to read through databases</p><p>UPDATE- allow them to update table rows</p><p>GRANT OPTION- allows them to grant or remove other users’ privileges</p><p>To provide a specific user with a permission, you can use this framework:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">GRANT [<span class="built_in">type</span> of permission] ON [database name].[table name] TO `[username]`@`localhost`;</div></pre></td></tr></table></figure><p>If you want to give them access to any database or to any table, make sure to put an asterisk (*) in the place of the database name or table name.</p><p>Each time you update or change a permission be sure to use the Flush Privileges command.</p><p>If you need to revoke a permission, the structure is almost identical to granting it:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">REVOKE [<span class="built_in">type</span> of permission] ON [database name].[table name] FROM `[username]`@`localhost`;</div></pre></td></tr></table></figure><p>Just as you can delete databases with DROP, you can use DROP to delete a user altogether:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">DROP USER `demo`@`localhost`;</div></pre></td></tr></table></figure><p>To test out your new user, log out by typing</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">quit</div></pre></td></tr></table></figure><p>and log back in with this command in terminal:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysql -u [username]-p</div></pre></td></tr></table></figure></div><div class="bottom-panel"><ul class="social-likes" data-url="/2014/08/08/precise-mysql-setup/"><li class="facebook" title="like"></li><li class="twitter" title="twitte"></li><li class="plusone" title="google"></li></ul></div></div></div><div class="widgetarea"><div class="tagcloud" id="fbox-tagcloud" style="margin:10px; display:none; overflow: hidden"></div><ul class="widget blogroll"><h3 class="title">Recent Post</h3><li><div class="text-holder"><h3 class="link-title"><a href="/2014/08/08/sshd-exploit/">sshd exploit</a></h3><p>So a fake sshd claiming to exploit a network check</p></div></li><li><div class="text-holder"><h3 class="link-title"><a href="/2014/08/08/securing-linux-servers/">Securing Linux Servers</a></h3><p>Introduction Taking control of your own Linux serv</p></div></li><li><div class="text-holder"><h3 class="link-title"><a href="/2014/08/08/precise-mysql-setup/">How To Setup MySQL on Ubuntu 12.04</a></h3><p>What the italic Means The lines that the user nee</p></div></li><li><div class="text-holder"><h3 class="link-title"><a href="/2014/08/08/muh-ssh-keys-doe/">Generating secure (ECDSA) SSH keys for your new install</a></h3><p>Generating a SSH key An SSH key pair can be genera</p></div></li><li><div class="text-holder"><h3 class="link-title"><a href="/2014/08/08/this-exploit-was-bad-mmmk/">Heartbleed Announcment</a></h3><p>Important SSL Security VulnerabilityOn Monday, Apr</p></div></li></ul></div></div></div><div class="footer"><div class="container"><a href="//github.com/kywk/hexo-theme-awe">AWE for hexo</a> inspired by <a href="http://goo.gl/H8OMRE">Awesome UI Kit</a>, ported by <a href="//kywk.github.io/">MooCow (Aka. kywk)</a>. &copy; 2014 Trevor Driscoll All Rights Reserved</div></div><script>$(document).ready(function(){$(".imgLiquid").imgLiquid({fill:!0,fadeInTime:500})});</script><link rel="stylesheet" href="/package/fancybox/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"><script type="text/javascript" src="/package/fancybox/jquery.fancybox.pack.js?v=2.1.5"></script><script type="text/javascript">!function(e){e(".fancybox").fancybox(),e(".various").fancybox({maxWidth:800,maxHeight:600,fitToView:!1,width:"70%",height:"70%",autoSize:!0,closeClick:!1,openEffect:"none",closeEffect:"none"})}(jQuery);</script></body></html>
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+  <meta name="viewport" content="width=932" >
+  <meta name="MobileOptimized" content="932" >
+  <meta name="generator" content="D34TH">
+  <title>How To Setup MySQL on Ubuntu 12.04</title>
+
+  <link rel="stylesheet" type="text/css" href="/css/normalize.css">
+  <link rel="stylesheet" type="text/css" href="/css/awe.css">
+  <link rel="stylesheet" type="text/css" href="/css/social-likes.css">
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="">
+
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script src="/js/imgLiquid-min.js"></script>
+  <script src="/js/social-likes.min.js"></script>
+</head>
+
+<body>
+  <div class="main-container">
+    
+
+<div class="box profile">
+  <div class="heading" style="background: #3e5354 url(/images/bg-heading.jpg) no-repeat;">
+    <div class="profile-img">
+      <a href="//grimd34th.github.io/"><img src="/images/img-profile.jpg" width="154" height="150" alt="image description"></a>
+    </div>
+    <strong class="user"><a href="/">D34TH</a></strong>
+    <span class="locate">United States</span>
+  </div>
+  <div class="setting">
+    <a href="//grimd34th.github.io/" class="btn-profile">Profile</a>
+    <a href="/" class="btn-photos">Photos</a>
+    <a href="/" class="btn-follow">Follow me</a>
+  </div>
+</div>
+
+    
+<div class="two-columns post-page">
+  <div class="content">
+
+    <div class="post box nocover">
+      <em class="date"><span>08</span>Aug</em>
+      <h2 class="post-title"><a href="/2014/08/08/precise-mysql-setup/">How To Setup MySQL on Ubuntu 12.04</a></h2>
+      <div class="post-content"><h4 id="What_the_italic_Means">What the <em>italic</em>  Means<br></h4>
+<h5 id="The_lines_that_the_user_needs_to_enter_or_customize_will_be_in_italic_in_this_tutorial!">The lines that the user needs to enter or customize will be in <em>italic</em> in this tutorial!</h5>
+<p>The rest should mostly be copy-and-pastable.</p>
+<h5 id="About_MySQL">About MySQL<br></h5>
+<p>MySQL is an open source database management software that helps users store, organize, and later retrieve data. It has a variety of options to grant specific users nuanced permissions within the tables and databases�this tutorial will give a short overview of a few of the many options. </p>
+<p>How to Create a New User In Part 1 of the MySQL Tutorial, we did all of the editing in MySQL as the root user, with full access to all of the databases. However, in the cases where more restrictions may be required, there are ways to create users with custom permissions.</p>
+<p>Let�s start by making a new user within the MySQL shell:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">CREATE USER `newuser`@`localhost` IDENTIFIED BY `password`;</div></pre></td></tr></table></figure>
+
+<p>Sadly, at this point newuser has no permissions to do anything with the databases. In fact, if newuser even tries to login (with the password, password), they will not be able to reach the MySQL shell. </p>
+<p>Therefore, the first thing to do is to provide the user with access to the information they will need.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">GRANT ALL PRIVILEGES ON * . * TO `newuser`@`localhost`;</div></pre></td></tr></table></figure>
+
+<p>The asterisks in this command refer to the database and table (respectively) that they can access�this specific command allows to the user to read, edit, execute and perform all tasks across all the databases and tables. </p>
+<p>Once you have finalized the permissions that you want to set up for your new users, always be sure to reload all the privileges.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">FLUSH PRIVILEGES;</div></pre></td></tr></table></figure>
+
+<p>Your changes will now be in effect.</p>
+<p>How To Grant Different User Permissions Here is a short list of other common possible permissions that users can enjoy.</p>
+<p>ALL PRIVILEGES- as we saw previously, this would allow a MySQL user all access to a designated database (or if no database is selected, across the system)</p>
+<p>CREATE- allows them to create new tables or databases</p>
+<p>DROP- allows them to them to delete tables or databases</p>
+<p>DELETE- allows them to delete rows from tables</p>
+<p>INSERT- allows them to insert rows into tables</p>
+<p>SELECT- allows them to use the Select command to read through databases</p>
+<p>UPDATE- allow them to update table rows</p>
+<p>GRANT OPTION- allows them to grant or remove other users’ privileges</p>
+<p>To provide a specific user with a permission, you can use this framework:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">GRANT [<span class="built_in">type</span> of permission] ON [database name].[table name] TO `[username]`@`localhost`;</div></pre></td></tr></table></figure>
+
+<p>If you want to give them access to any database or to any table, make sure to put an asterisk (*) in the place of the database name or table name. </p>
+<p>Each time you update or change a permission be sure to use the Flush Privileges command. </p>
+<p>If you need to revoke a permission, the structure is almost identical to granting it:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">REVOKE [<span class="built_in">type</span> of permission] ON [database name].[table name] FROM `[username]`@`localhost`;</div></pre></td></tr></table></figure>
+
+<p>Just as you can delete databases with DROP, you can use DROP to delete a user altogether:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">DROP USER `demo`@`localhost`;</div></pre></td></tr></table></figure>
+
+<p>To test out your new user, log out by typing</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">quit</div></pre></td></tr></table></figure>
+
+<p>and log back in with this command in terminal:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysql -u [username]-p</div></pre></td></tr></table></figure>
+
+</div>
+
+      <div class="bottom-panel">
+        <ul class="social-likes" data-url="/2014/08/08/precise-mysql-setup/">
+          <li class="facebook" title="like"></li>
+          <li class="twitter" title="twitte"></li>
+          <li class="plusone" title="google"></li>
+        </ul>
+      </div>
+    </div>
+    
+  </div>
+
+  <div class="widgetarea">
+
+    
+    
+
+<div class="tagcloud" id="fbox-tagcloud" style="margin:10px; display:none; overflow: hidden"></div>
+
+    
+
+    
+      
+
+<ul class="widget blogroll">
+  <h3 class="title">Recent Post</h3>
+  
+    
+    <li>
+      <div class="text-holder">
+        <h3 class="link-title"><a href="/2014/08/08/sshd-exploit/">sshd exploit</a></h3>
+        <p>So a fake sshd claiming to exploit a network check</p>
+      </div>
+    </li>
+  
+    
+    <li>
+      <div class="text-holder">
+        <h3 class="link-title"><a href="/2014/08/08/securing-linux-servers/">Securing Linux Servers</a></h3>
+        <p>Introduction
+Taking control of your own Linux serv</p>
+      </div>
+    </li>
+  
+    
+    <li>
+      <div class="text-holder">
+        <h3 class="link-title"><a href="/2014/08/08/precise-mysql-setup/">How To Setup MySQL on Ubuntu 12.04</a></h3>
+        <p>What the italic  Means
+The lines that the user nee</p>
+      </div>
+    </li>
+  
+    
+    <li>
+      <div class="text-holder">
+        <h3 class="link-title"><a href="/2014/08/08/muh-ssh-keys-doe/">Generating secure (ECDSA) SSH keys for your new install</a></h3>
+        <p>Generating a SSH key
+An SSH key pair can be genera</p>
+      </div>
+    </li>
+  
+    
+    <li>
+      <div class="text-holder">
+        <h3 class="link-title"><a href="/2014/08/08/this-exploit-was-bad-mmmk/">Heartbleed Announcment</a></h3>
+        <p>Important SSL Security VulnerabilityOn Monday, Apr</p>
+      </div>
+    </li>
+  
+</ul>
+
+
+    
+
+  </div>
+</div>
+
+
+  </div>
+  
+<div class="footer">
+  <div class="container">
+    <a href="//github.com/kywk/hexo-theme-awe">AWE for hexo</a> inspired by <a href="http://goo.gl/H8OMRE">Awesome UI Kit</a>,
+    ported by <a href="//kywk.github.io/">MooCow (Aka. kywk)</a>.
+    
+    &copy; 2014 Trevor Driscoll All Rights Reserved
+    
+  </div>
+</div>
+
+  <!-- disqus -->
+
+
+
+<script>
+$(document).ready(function() {
+  $('.imgLiquid').imgLiquid({fill:true, fadeInTime:500});
+});
+</script>
+
+
+<!-- fancybox -->
+<link rel="stylesheet" href="/package/fancybox/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen" />
+<script type="text/javascript" src="/package/fancybox/jquery.fancybox.pack.js?v=2.1.5"></script>
+<script type="text/javascript">
+(function($){
+  $(".fancybox").fancybox();
+  $(".various").fancybox({
+    maxWidth  : 800,
+    maxHeight : 600,
+    fitToView : false,
+    width   : '70%',
+    height    : '70%',
+    autoSize  : true,
+    closeClick  : false,
+    openEffect  : 'none',
+    closeEffect : 'none'
+  });
+})(jQuery);
+</script>
+
+</body>
+</html>
