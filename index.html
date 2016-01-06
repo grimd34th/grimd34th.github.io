@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Trevor Driscoll's Blog</title>
+</head>
+<body>
+<h1 id="title">If you see this, something isn't working...</h1>
+<div id="content"></div>
+<div id="metafields"></div>
+<script src="cosmicjs.browser.min.js"></script>
+<script>
+var config = {
+  bucket: {
+    slug: 'tdriscoll'
+  },
+  object: {
+    slug: 'home'
+  }
+};
+Cosmic.getObject(config, config.object, (err, res) => {
+  var object = res.object;
+  document.getElementById('title').innerHTML = object.title;
+  document.getElementById('content').innerHTML = object.content;
+  var metafields = object.metafields;
+  var images = '';
+  metafields.forEach(function(metafield){
+    images += '<h2>' + metafield.title + '</h2>';
+    images += '<img width="300" src="https://cosmicjs.com/uploads/' + metafield.value + '"/>';
+    images += '<br><br>';
+  })
+  document.getElementById('metafields').innerHTML = images;
+});
+</script>
+</body>
+</html>
