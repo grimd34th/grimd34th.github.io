@@ -1,0 +1,75 @@
+==================================================================
+https://keybase.io/grimd34th
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://tdriscoll.link
+  * I am grimd34th (https://keybase.io/grimd34th) on keybase.
+  * I have a public key with fingerprint B2F9 52E8 2A55 5A51 A302  4B0D 97BF 40C5 EF1D 6BE4
+
+To do so, I am signing this object:
+
+{
+  "body": {
+    "key": {
+      "eldest_kid": "0101e30893d2396767070d27523acf0dfbe684f913fd57d7a7e09c73934b70fcb5380a",
+      "fingerprint": "b2f952e82a555a51a3024b0d97bf40c5ef1d6be4",
+      "host": "keybase.io",
+      "key_id": "97bf40c5ef1d6be4",
+      "kid": "0101e30893d2396767070d27523acf0dfbe684f913fd57d7a7e09c73934b70fcb5380a",
+      "uid": "b74fd3cb1dde45225c42bdf18126e200",
+      "username": "grimd34th"
+    },
+    "service": {
+      "hostname": "tdriscoll.link",
+      "protocol": "https:"
+    },
+    "type": "web_service_binding",
+    "version": 1
+  },
+  "ctime": 1511662873,
+  "expire_in": 157680000,
+  "prev": "e1cdaa783f4821333c6caa8b98b8b386e370b3fc8dce2857c9d44f22c102495d",
+  "seqno": 12,
+  "tag": "signature"
+}
+
+which yields the signature:
+
+-----BEGIN PGP MESSAGE-----
+Version: Keybase OpenPGP v2.0.76
+Comment: https://keybase.io/crypto
+
+yMNKAnicrVJtUBVVGL5cMOAKgmTXgLl3aAeVimD37O7dXUIrRjMaarwUiWhed/ec
+hQ3uB3uXD0WQEcGy8BpFhhnYDwqChtIGiURCTcWPQKCBwqkBJKOJdMYGaQxol7F/
+/ez8OXOe8zzPed73vOdC/Q0mv8PdT397y5J7w+9yzwcFhqyoVZElmOCGO7GkEiwX
+LW4oDyKv6siVIZaE4QROIBJnORICkrMxNgZncAgYGpC8KOFQEpCNpSSOICVIM5Dh
+GYRzIkNyJCUwuCQKNMniPBaPSbIrGykeRXapmq0AJI4GiAU8TdM8TfAkDigBhxwj
+SBQu0kgioE1AlCbMcXt1hRZO4L0oQXZrmHZwLMb7D/7/nLtg0U5gKAmSokBAiCga
+AFqkgAAlgiWADQEc14lepLh4J9LY2YrshCSl5mCl8ZgGF8oi0jurl3KfokJF9oru
+vLyEPNmVq8k9ilt1a4B2l6OqHm+SrlV3enRyERIc920cguyCWis1RSFSvLLbhSUR
+GlNUZd2XoAnCZgMsQ8ZjqNgjK8gh6wyasbG4tvR3UKFmiQgR8jzDkhLFAoIkSdEm
+8jwrcKzACiRrQySDC6QkslBEgKUZkYMUJQEgEtpHcTTE9MLyXW7NG2g5+WzN0ytn
+u3i1QEFY6ZmebQEGP5PhgSVGfcYMpuDwfycPzwhbSI/Z+Hgl62uKkQ6sOvXI8qjr
+1Rf2BzcoHTcmgz7e3Wv/+fqKK057ctc2w4fmvxbS68q8/ZePpDy6vTlMdp7YuzKw
+dKADOAbmj9czKy6YKkb6ptLjWsrjrpW/Ye/o2TzTGVEZeyzzLcv75HxN2WiONeud
++oBGLmRm0ur/OtfwsmcBXqve18ZURHc7YueemZ5JH9xQ5ox8ITiuqC7/1emUtQk1
+X8i+QMNqcLTY1Gv0cVNLq1+8mfruL83qZ/n3+tNHHgpJmX3ibPKPEz9MWl5R877m
+T5wup+92LRkbjm9tahlu9yNum7t/bRsdT+5Z93ZppNX8TdWWUXS15nxaeH6XnPB9
+rv/qurm6YL+S6D0z8yqY2NDYPhH2+x/Jt+Cu1AZD570h00s/JSb1bd3Y+ql5MGil
+r+74m9VfZj681Jz959rAXbVzLTsetK5fHrH7SZAY3VexxvHVofGKv78rL/rttgUM
+Lbsye+dceG1T1KUgT2TV80MBxcO+rrG9ae0HuQPnn4u+2zZujzdi7xVcGmAqYyKM
+beWd5nXGjJvFRimWC+5o9PjOBsmhWyzeirFPLKf3yUpvTdmZx+x7uPGx+sSnPrrY
+uqnXumx9y8VToRFbcefJUXnHGqF4drvUeudzx9GMRGf/WNaxhtqrlYmpgtJ85LW0
+wJM9z5YOJG8eHJmer0ppCgmbytxUfbjgHzmtuO8=
+=MlyJ
+-----END PGP MESSAGE-----
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/grimd34th
+
+==================================================================
+
